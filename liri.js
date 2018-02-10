@@ -2,7 +2,7 @@
 
 require("dotenv").config();
 var request = require('request');
-var keys = require("keys.js");
+var keys = require("./keys.js");
 var fs = require("fs");
  
 var command = process.argv[2];
@@ -13,7 +13,7 @@ function run(){
     if (command === "my-tweets"){
         tweets();
     }
-    
+
     else if (command === "spotify-this-song")
     {spotifySong();}
     
@@ -42,12 +42,19 @@ function tweets(){
     });
    
     var params = {screen_name: 'jefeAlias'};
-    
+ 
     client.get('statuses/user_timeline', params, function(error, tweets, response) {
       if (!error) {
         for(var index in tweets){
             console.log(tweets[index].text);
+     
+            fs.appendFile("log.txt", tweets[index]+ ",", function(err) {
+                if (err) {
+                  return console.log(err);
+                }
+              });
         }
+     
       }
     });
 
